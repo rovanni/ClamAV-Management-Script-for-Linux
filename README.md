@@ -1,8 +1,16 @@
-# Script to scan for viruses on Linux
+# Script to check for viruses on Linux
+
+## 🚀 Getting Started
+
+This script uses Clamav to scan and remove viruses on Linux.
 
 
-This script uses Clamav to scan and remove viruses on Linux, compatible with Debian-based Linux distributions.
-LICENSE: GPLv3
+### 📋 Prerequisites
+Compatible with Debian-based Linux distribution.
+
+## 📄 License
+
+This project is under license (GNU General Public License v3.0) - see the file [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE) for details.
 
 It works for the following options:
 
@@ -17,6 +25,8 @@ It works for the following options:
 5)Open latest virus scan report
 
 6)Exit the program
+
+### What each option does:
 
 1. The first option is a quick scan, it does recursive searches in the user's "home" folder, and removes the viruses found. In this option, files up to 5MB are scanned, if any virus is found, it is removed and a report is generated.
 Parameters used:
@@ -44,12 +54,25 @@ cat /var/log/clamav/relscan.log
 
 6. The sixth option exits the program.
 
+## ✒️ Author
+
+Luciano R. Nascimento
+rovanni@gmail.com
+
 
 #  Script para verificar vírus no Linux (Versão em português)
 
+## 🚀 Começando
 
-Esse script utiliza o Clamav para verificar e remover vírus no Linux, compatível com distribuição Linux baseadas em Debian.
-LICENÇA: GPLv3 
+Esse script utiliza o Clamav para verificar e remover vírus no Linux.
+
+
+### 📋 Pré-requisitos
+Compatível com distribuição Linux baseadas em Debian.
+
+## 📄 Licença
+
+Este projeto está sob a licença (GNU General Public License v3.0) - veja o arquivo [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE) para detalhes.
 
 Serve para as seguintes opções:
 
@@ -64,6 +87,8 @@ Serve para as seguintes opções:
 5)Abrir ultimo relatório de verificação de vírus
 
 6)Sair do programa
+
+###  O que cada opção faz:
 
 1. A primeira opção, é uma verificação rápida, faz buscas recursivas na pasta do usuário "home", e remove os vírus encontrados, nesta opção são verificados os arquivos de até 5MB, caso encontre algum vírus é removido e gerado um relatório.
 Parâmetros utilizados:
@@ -90,3 +115,8 @@ Parâmetros utilizados:
 	cat /var/log/clamav/relscan.log
 
 6. A sexta opção sai do programa.
+
+## ✒️ Autor
+
+Luciano R. Nascimento
+rovanni@gmail.com
