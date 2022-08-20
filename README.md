@@ -10,21 +10,16 @@ Compatible with Debian-based Linux distribution.
 
 ## 📄 License
 
-This project is under license (GNU General Public License v3.0) - see the file [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE) for details.
+This project is under license (GNU General Public License v3.0. - see the file [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE. for details.
 
-It works for the following options:
+### It works for the following options:
 
-1) Scanning and removing viruses from home folder files up to 5MB.
-
-2) Scanning and removing viruses from the basic home folder.
-
-3) Scanning and removing viruses from full root folder up to 5MB files.
-
-4)Install Clamav Antivirus
-
-5)Open latest virus scan report
-
-6)Exit the program
+1. Scanning and removing viruses from home folder files up to 5MB.
+2. Scanning and removing viruses from the basic home folder.
+3. Scanning and removing viruses from full root folder up to 5MB files.
+4. Install Clamav Antivirus
+5. Open latest virus scan report
+6. Exit the program
 
 ### What each option does:
 
@@ -57,7 +52,6 @@ cat /var/log/clamav/relscan.log
 ## ✒️ Author
 
 Luciano R. Nascimento
-rovanni@gmail.com
 
 
 #  Script para verificar vírus no Linux (Versão em português)
@@ -72,21 +66,16 @@ Compatível com distribuição Linux baseadas em Debian.
 
 ## 📄 Licença
 
-Este projeto está sob a licença (GNU General Public License v3.0) - veja o arquivo [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE) para detalhes.
+Este projeto está sob a licença (GNU General Public License v3.0. - veja o arquivo [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE. para detalhes.
 
-Serve para as seguintes opções:
+### Serve para as seguintes opções:
 
-1)Verificando e removendo vírus da pasta home arquivos até 5MB.
-
-2)Verificando e removendo vírus da pasta home básica.
-
-3)Verificando e removendo vírus da pasta raiz completa até arquivos 5MB.
-
-4)Instalar Antivírus Clamav
-
-5)Abrir ultimo relatório de verificação de vírus
-
-6)Sair do programa
+1. Verificando e removendo vírus da pasta home arquivos até 5MB.
+2. Verificando e removendo vírus da pasta home básica.
+3. Verificando e removendo vírus da pasta raiz completa até arquivos 5MB.
+4. Instalar Antivírus Clamav
+5. Abrir ultimo relatório de verificação de vírus
+6. Sair do programa
 
 ###  O que cada opção faz:
 
@@ -119,4 +108,3 @@ Parâmetros utilizados:
 ## ✒️ Autor
 
 Luciano R. Nascimento
-rovanni@gmail.com
