@@ -1,7 +1,7 @@
 #!/bin/bash
 ################################################################
 # NAME: antivirus.sh
-# VERSION: 1.0
+# VERSION: 1.1
 # DESCRIPTION: Script to scan and remove Linux viruses
 # DATE OF CREATION: 08/14/2022
 # WRITTEN BY: Luciano R. Nascimento
@@ -41,7 +41,7 @@ function header(){
 	sudo chmod -R 777 /var/log/clamav/ #Write permission to folder
 	echo >>/var/log/clamav/relscan.log #Write a blank space into file
 	echo >>/var/log/clamav/relscan.log #Write a blank space into file
-	echo ==================================================== ======== >>/var/log/clamav/relscan.log #prints a line
+	echo ============================================================= >>/var/log/clamav/relscan.log #prints a line
 	echo ----------- Virus Scan Report ----------- >>/var/log/clamav/relscan.log #Write header
 	data=`date +%d/%m/%Y-%H:%M:%S` #Store day and time in the date variable
 	echo Report generated day: ${date} >>/var/log/clamav/relscan.log #Write current date and time into file
@@ -54,7 +54,7 @@ function closure(){
 ################################################################
 	data=`date +%d/%m/%Y-%H:%M:%S` #Store day and time in the date variable
 	echo Verification finished: ${date} >>/var/log/clamav/relscan.log #Write current date and time into file
-	echo ==================================================== ======== >>/var/log/clamav/relscan.log #prints a line
+	echo ============================================================= >>/var/log/clamav/relscan.log #prints a line
 	echo ""
 	echo "Verification completed successfully............................................ .....[ OK ]";
 	echo "Report generated in: /var/log/clamav/relscan.log................................... [ OK ]";
@@ -70,42 +70,44 @@ menu()
 while true $x != "antivirus"
 do
 clear
-echo "=================================================== ==========================="
+echo "==============================================================================="
 echo "Script to help with virus removal!"
 echo "In all check options the Database"
 echo "from Clamav Antivirus and updated before scanning."
 echo "Created by: Luciano R.N."
 echo ""
-echo "1)Checking and removing viruses from home folder files up to 5MB."
+echo "1)Scanning using multiple threads and removing viruses from home folder all files."
 echo ""
-echo "2)Checking and removing viruses from home folder all files."
+echo "2)Scanning using multiple threads and scanning and removing viruses from the complete,"
+echo "root folder up to 5MB files."
 echo ""
-echo "3) Scanning and removing viruses from complete root folder up to 5MB files."
+echo "3)Checking and removing viruses from home folder all files."
 echo ""
-echo "4)Install Clamav Antivirus"
+echo "4)Scanning and removing viruses from complete root folder up to 5MB files."
 echo ""
-echo "5)Open latest virus scan report"
+echo "5)Install Clamav Antivirus"
 echo ""
-echo "6)Exit program"
+echo "6)Open latest virus scan report"
 echo ""
-echo "=================================================== ==========================="
+echo "7)Exit program"
+echo ""
+echo "==============================================================================="
 echo "Enter the desired option:"
 read x
 echo "Option informed ($x)"
-echo "=================================================== ==========================="
+echo "==============================================================================="
 
 case "$x" in
 
 	1)
 		################# Update Clamav Antivirus Database ###############################
 		update ##calls update function
-		###################### Scan and remove HD virus ################################
+		###################### Scan and remove home virus ################################
 		echo
 		echo "Checking and removing viruses from home folder. Please wait!!!.......................";
 		echo
 		header ## call header function
-		sudo clamscan --recursive /home/ --max-filesize=5M --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --multiscan
-		  >> /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
+		sudo clamdscan --multiscan --fdpass --recursive /home/ --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --quiet >> /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
 		closure ##calls shutdown function
 
 echo "================================================"
@@ -118,7 +120,7 @@ echo "================================================"
 		echo "Checking and removing viruses from home folder. Please wait!!!.......................";
 		echo
 		header ## call header function
-		sudo clamscan --recursive /home/ --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --multiscan >> /var/log/clamav/relscan.log #Check and remove the virus and writes the report inside the file
+		sudo clamdscan --multiscan --fdpass / --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --quiet >> /var/log/clamav/relscan.log #Check and remove the virus and writes the report inside the file
 		closure ##calls shutdown function
 
 echo "================================================"
@@ -126,17 +128,32 @@ echo "================================================"
 	3)
 		################# Update Clamav Antivirus Database ########################### ###
 		update ##calls update function
-		###################### Scan and remove hd virus ##################### ##########
+		###################### Scan and remove home virus ##################### ##########
 		echo
 		echo "Checking and removing viruses from the / folder. Please wait!!!.......................";
 		echo
 		header ## call header function
-		sudo clamscan --recursive / --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --max-filesize=5M --bell --remove=yes -i --multiscan > > /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
+		sudo clamscan --recursive /home/ --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 >> /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
 		closure ##calls shutdown function
 
 echo "================================================"
-;;
+
 	4)
+		################# Update Clamav Antivirus Database ########################### ###
+		update ##calls update function
+		###################### Scan and remove HD virus ##################### ##########
+		echo
+		echo "Checking and removing viruses from the / folder. Please wait!!!.......................";
+		echo
+		header ## call header function
+		sudo clamscan --recursive / --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --bell --remove=yes -i >> /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
+		closure ##calls shutdown function
+
+echo "================================================"
+
+
+;;
+	5)
 		echo "Installing Antivirus..."
 		sudo apt-get update && sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk -y
 		sudo /etc/init.d/clamav-freshclam stop
@@ -148,7 +165,7 @@ echo "================================================"
 
 echo "================================================"
 ;;
-	5)
+	6)
 		echo "Open latest virus scan report..."
 		cat /var/log/clamav/relscan.log
 		echo ""
@@ -158,7 +175,7 @@ echo "================================================"
 
 echo "================================================"
 ;;
-	6)
+	7)
 		echo "Exiting..."
 		sleep 1
 		clear;

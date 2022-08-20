@@ -1,7 +1,7 @@
 #!/bin/bash
 ###################################################################
 # NOME:				antivirus.sh
-# VERSÃO:				1.0
+# VERSÃO:				1.1
 # DESCRIÇÃO:			Script para verificar e removendo vírus Linux 			
 # DATA DA CRIAÇÃO:	14/08/2022
 # ESCRITO POR:		Luciano R. Nascimento
@@ -70,42 +70,43 @@ menu ()
 while true $x != "antivirus"
 do
 clear
-echo "========================================================================"
-echo "Script para ajudar na remoção de vírus!"
-echo "Em todas as opções de verificação a Base de dados"
-echo "do Antivírus Clamav e atualizada antes da verificação."
-echo "Criado por: Luciano R.N."
+echo "==============================================================================="
+echo "Script to help with virus removal!"
+echo "In all check options the Database,"
+echo "from Clamav Antivirus and updated before scanning."
+echo "Created by: Luciano R.N."
 echo ""
-echo "1)Verificando e removendo vírus da pasta home arquivos até 5MB."
+echo "1)Quick scan on user's home folder, performs recursive searches using multiple simultaneous threads."
 echo ""
-echo "2)Verificando e removendo vírus da pasta home todos arquivos."
+echo "2)Fast HD scan, performs recursive searches using multiple simultaneous threads."
 echo ""
-echo "3)Verificando e removendo vírus da pasta raiz completa até arquivos 5MB."
+echo "3)Check and remove viruses from home folder all files."
 echo ""
-echo "4)Instalar Antivírus Clamav"
+echo "4)Scans and removes viruses from the root folder, less system files."
 echo ""
-echo "5)Abrir ultimo relatório de verificação de vírus"
+echo "5)Install Clamav Antivirus."
 echo ""
-echo "6)Sair do programa"
+echo "6)Open latest virus scan report."
 echo ""
-echo "========================================================================"
-echo "Digite a opção desejada:"
+echo "7)Exit the program."
+echo ""
+echo "==============================================================================="
+echo "Enter the desired option:"
 read x
-echo "Opção informada ($x)"
-echo "========================================================================"
+echo "Option informed ($x)"
+echo "==============================================================================="
 
 case "$x" in
 
 	1)
 		################# Atualizar Base dados Antivírus Clamav ###############################
 		atualizar ##chama função atualizar	
-		####################### Verificar e remover vírus HD ###############################
+		####################### Verificar e remover vírus home ###############################
 		echo
 		echo "Verificando e removendo vírus da pasta home. Por Favor Aguarde!!!.......................";
 		echo		
 		cabecalho ##chama função cabeçalho
-		sudo clamscan --recursive /home/ --max-filesize=5M --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --multiscan
- >> /var/log/clamav/relscan.log	#Verifica e remove os virus e grava o relatoria dentro do arquivo
+		sudo clamdscan --multiscan --fdpass --recursive /home/ --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --quiet >> /var/log/clamav/relscan.log	#Verifica e remove os virus e grava o relatoria dentro do arquivo
 		encerramento ##chama função encerramento
 
 echo "================================================"
@@ -113,12 +114,12 @@ echo "================================================"
 	2)
 		################# Atualizar Base dados Antivírus Clamav ###############################
 		atualizar ##chama função atualizar	
-		####################### Verificar e remover vírus HD ###############################
+		####################### Verificar e remover virus HD ###############################
 		echo
-		echo "Verificando e removendo vírus da pasta home. Por Favor Aguarde!!!.......................";
-		echo		
+		echo "Verificando e removendo vírus da pasta /. Por Favor Aguarde!!!.......................";
+		echo
 		cabecalho ##chama função cabeçalho
-		sudo clamscan --recursive /home/ --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --multiscan >> /var/log/clamav/relscan.log	#Verifica e remove os virus e grava o relatoria dentro do arquivo
+		sudo clamdscan --multiscan --fdpass / --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --quiet >> /var/log/clamav/relscan.log	#Verifica e remove os vírus e grava o relatoria dentro do arquivo
 		encerramento ##chama função encerramento
 
 echo "================================================"
@@ -126,17 +127,32 @@ echo "================================================"
 	3)
 		################# Atualizar Base dados Antivírus Clamav ###############################
 		atualizar ##chama função atualizar	
-		####################### Verificar e remover virus hd ###############################
+		####################### Verificar e remover vírus home ###############################
 		echo
-		echo "Verificando e removendo vírus da pasta /. Por Favor Aguarde!!!.......................";
-		echo
+		echo "Verificando e removendo vírus da pasta home. Por Favor Aguarde!!!.......................";
+		echo		
 		cabecalho ##chama função cabeçalho
-		sudo clamscan --recursive / --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --max-filesize=5M --bell --remove=yes -i --multiscan >> /var/log/clamav/relscan.log	#Verifica e remove os vírus e grava o relatoria dentro do arquivo
+		sudo clamscan --recursive /home/ --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 
+ >> /var/log/clamav/relscan.log	#Verifica e remove os virus e grava o relatoria dentro do arquivo
 		encerramento ##chama função encerramento
 
 echo "================================================"
 ;;
 	4)
+		################# Atualizar Base dados Antivírus Clamav ###############################
+		atualizar ##chama função atualizar	
+		####################### Verificar e remover virus HD ###############################
+		echo
+		echo "Verificando e removendo vírus da pasta /. Por Favor Aguarde!!!.......................";
+		echo
+		cabecalho ##chama função cabeçalho
+		sudo clamscan --recursive / --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --bell --remove=yes -i >> /var/log/clamav/relscan.log	#Verifica e remove os vírus e grava o relatoria dentro do arquivo
+		encerramento ##chama função encerramento
+
+echo "================================================"
+
+;;
+	5)
 		echo "Instalando Antivírus..."
 		sudo apt-get update && sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk -y
 		sudo /etc/init.d/clamav-freshclam stop
@@ -148,7 +164,7 @@ echo "================================================"
 
 echo "================================================"
 ;;
-	5)
+	6)
 		echo "Abrir ultimo relatório de verificação de vírus..."
 		cat /var/log/clamav/relscan.log
 		echo ""
@@ -158,7 +174,7 @@ echo "================================================"
 
 echo "================================================"
 ;;
-	6)
+	7)
 		echo "Saindo..."
 		sleep 1
 		clear;
