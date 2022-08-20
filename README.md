@@ -1,4 +1,51 @@
-#  Script para verificar vírus no Linux
+# Script to scan for viruses on Linux
+
+
+This script uses Clamav to scan and remove viruses on Linux, compatible with Debian-based Linux distributions.
+LICENSE: GPLv3
+
+It works for the following options:
+
+1) Scanning and removing viruses from home folder files up to 5MB.
+
+2) Scanning and removing viruses from the basic home folder.
+
+3) Scanning and removing viruses from full root folder up to 5MB files.
+
+4)Install Clamav Antivirus
+
+5)Open latest virus scan report
+
+6)Exit the program
+
+1. The first option is a quick scan, it does recursive searches in the user's "home" folder, and removes the viruses found. In this option, files up to 5MB are scanned, if any virus is found, it is removed and a report is generated.
+Parameters used:
+sudo clamscan --recursive /home/ --max-filesize=5M --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --multiscan
+ >> /var/log/clamav/relscan.log
+
+2. The second option is a scan that makes recursive searches in the user's "home" folder, and removes the viruses found. In this option, all files are scanned with no size limit, if any virus is found, it is removed and a report is generated.
+Parameters used:
+sudo clamscan --recursive /home/ --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --multiscan >> /var/log/clamav/relscan.log
+
+3. The third option is a check of the HD where Linux is installed, it makes recursive searches in the HD folder, and removes the viruses found, in this option files of up to 5MB are checked, if any virus is found, it is removed and a report.
+Parameters used:
+sudo clamscan --recursive / --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --max-filesize=5M --bell --remove=yes -i --multiscan > > /var/log/clamav/relscan.log
+
+4. The fourth option, server to install Clamav if it is not installed, after installing and updating the Antivirus database.
+Parameters used:
+sudo apt-get update && sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk -y
+sudo /etc/init.d/clamav-freshclam stop
+sudo /usr/bin/freshclam -v
+sudo /etc/init.d/clamav-freshclam start
+
+5. The fifth option, I opened the latest virus scan report.
+Parameters used:
+cat /var/log/clamav/relscan.log
+
+6. The sixth option exits the program.
+
+
+#  Script para verificar vírus no Linux (Versão em português)
 
 
 Esse script utiliza o Clamav para verificar e remover vírus no Linux, compatível com distribuição Linux baseadas em Debian.
