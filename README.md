@@ -10,7 +10,7 @@ Compatible with Debian-based Linux distribution.
 
 ## 📄 License
 
-This project is under license (GNU General Public License v3.0. - see the file [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE. for details.
+This project is under license (GNU General Public License v3.0. - see the file [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE) for details.
 
 ### It works for the following options:
 
@@ -66,7 +66,7 @@ Compatível com distribuição Linux baseadas em Debian.
 
 ## 📄 Licença
 
-Este projeto está sob a licença (GNU General Public License v3.0. - veja o arquivo [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE. para detalhes.
+Este projeto está sob a licença (GNU General Public License v3.0. - veja o arquivo [LICENSE.md](https://github.com/rovanni/Script_antivirus_Linux/blob/main/LICENSE) para detalhes.
 
 ### Serve para as seguintes opções:
 
