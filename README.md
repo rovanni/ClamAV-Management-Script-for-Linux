@@ -1,8 +1,8 @@
-# Script to check for viruses on Linux
+# Script to check for virus on Linux
 
 ## 🚀 Getting Started
 
-This script uses Clamav to scan and remove viruses on Linux.
+This script uses Clamav to scan and remove virus on Linux.
 
 
 ### 📋 Prerequisites
