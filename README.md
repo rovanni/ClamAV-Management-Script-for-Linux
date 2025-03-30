@@ -1,6 +1,8 @@
 # ClamAV Management Script for Linux
+<a name="english"></a>
+**[English Version](#english)** | **[Versão em Português](#português)**
 
-![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)
+[![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/rovanni/ClamAV-Management-Script-for-Linux/blob/main/LICENSE)
 
 ## 🚀 Getting Started
 
@@ -36,6 +38,10 @@ Advanced menu-driven script for virus scanning and system protection using ClamA
 GNU General Public License v3.0 - See [LICENSE](https://github.com/rovanni/clamav-management-script/blob/main/LICENSE)
 
 ---
+<a name="português"></a>
+# Versão em Português
+
+## Visão Geral
 
 # Script de Gerenciamento ClamAV para Linux
 
@@ -70,7 +76,7 @@ Script avançado com menu para verificação de vírus e proteção do sistema u
 - 📈 Gerenciamento e visualização de logs
 
 ## 📄 Licença
-GNU General Public License v3.0 - Veja [LICENSE](https://github.com/rovanni/clamav-management-script/blob/main/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/rovanni/ClamAV-Management-Script-for-Linux/blob/main/LICENSE)
 
 ---
 
