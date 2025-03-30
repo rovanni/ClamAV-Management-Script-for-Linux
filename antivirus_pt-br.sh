@@ -22,8 +22,11 @@ function pause() {
 }
 
 function atualizar_db() {
-    echo "Atualizando base de dados do antivírus..."
-    sudo freshclam -v
+	echo "Atualizando o banco de dados de vírus do ClamAV. "
+	sudo systemctl stop clamav-freshclam
+	sudo freshclam
+	sudo systemctl start clamav-freshclam
+	echo "Banco de dados de vírus do ClamAV atualizado. ✅"
     pause
 }
 
@@ -113,21 +116,25 @@ function menu() {
             1)  # Instalar ClamAV
         		echo "Instalando Antivirus ClamAV..." 
         		sudo apt-get update && sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk -y
+        		echo "Instalando Antivirus ClamAV. ✅" 
         
-        		echo "Ativando ClamAV para monitoramento em tempo real..."
+        		echo "Configurando ClamAV para monitoramento em tempo real. "
         		sudo systemctl enable clamav-daemon
         		sudo systemctl start clamav-daemon
+        		echo "ClamAV configurado para monitoramento em tempo real. ✅"
         
-        		echo "Atualizando o banco de dados de vírus do ClamAV..."
+        		echo "Atualizando o banco de dados de vírus do ClamAV. "
         		sudo systemctl stop clamav-freshclam
         		sudo freshclam
         		sudo systemctl start clamav-freshclam
+        		echo "Banco de dados de vírus do ClamAV atualizado. ✅"
         
-        		echo "Reiniciando o daemon do ClamAV para aplicar atualizações..."
+        		echo "Reiniciando o daemon do ClamAV para aplicar atualizações. "
         		sudo systemctl restart clamav-daemon
+        		echo "Daemon do ClamAV Reiniciado. ✅"
         
         		echo ""
-        		echo "Antivirus ClamAV Instalado e Configurado!✅"
+        		echo "Antivirus ClamAV Instalado e Configurado! ✅"
                 pause
                 ;;
             
