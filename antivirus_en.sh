@@ -1,191 +1,175 @@
 #!/bin/bash
-################################################################
-# NAME: antivirus.sh
-# VERSION: 1.1
-# DESCRIPTION: Script to scan and remove Linux viruses
-# DATE OF CREATION: 08/14/2022
-# WRITTEN BY: Luciano R. Nascimento
-# E-MAIL: rovanni@gmail.com
-# DISTRO: Debian-based Linux
-# LICENSE: GPLv3
-# PROJECT: https://github.com/rovanni/Script_antivirus_Linux
-################################################################
+###################################################################
+# NAME:            clamav_manager.sh
+# VERSION:         3.0
+# DESCRIPTION:     ClamAV Management Script for Ubuntu Desktop
+# DATE:            14/08/2022 (updated 20/05/2024)
+# AUTHOR:          Luciano R. Nascimento
+# EMAIL:           rovanni@gmail.com
+# LICENSE:         GPLv3
+# PROJECT:         https://github.com/rovanni/ClamAV-Management-Script-for-Linux/
+###################################################################
 
-function pause(){
-###############################################################
-# Function to create a pause
-###############################################################
-	read -s -n 1 -p "Press any key to continue . . ."
-	echo ""
+# Configuration
+LOG_DIR="/var/log/clamav"
+LOG_FILE="$LOG_DIR/scan_report.log"
+AUTO_SCAN_LOG="$LOG_DIR/auto_scan.log"
+
+# Helper functions
+function pause() {
+    read -r -s -n 1 -p "Press any key to continue..."
+    echo
 }
 
-function update(){
-################################################################
-# Function to update the antivirus database
-################################################################
-	################# Update Clamav Antivirus Database ###############################
-	echo "Updating antivirus database. Please wait!!!................................";
-	echo ""
-	sudo /etc/init.d/clamav-freshclam stop
-	sudo /usr/bin/freshclam -v
-	sudo /etc/init.d/clamav-freshclam start
-	echo ""
-	echo "Updated antivirus database!!!................................................. .............";
-	echo ""
+function update_db() {
+    echo "Updating antivirus database..."
+    sudo freshclam -v
+    pause
 }
 
-function header(){
-################################################################
-# Function to update the antivirus database
-################################################################
-	sudo chmod -R 777 /var/log/clamav/ #Write permission to folder
-	echo >>/var/log/clamav/relscan.log #Write a blank space into file
-	echo >>/var/log/clamav/relscan.log #Write a blank space into file
-	echo ============================================================= >>/var/log/clamav/relscan.log #prints a line
-	echo ----------- Virus Scan Report ----------- >>/var/log/clamav/relscan.log #Write header
-	data=`date +%d/%m/%Y-%H:%M:%S` #Store day and time in the date variable
-	echo Report generated day: ${date} >>/var/log/clamav/relscan.log #Write current date and time into file
-	#echo >>/var/log/clamav/relscan.log #Write a blank space into the file
+function header() {
+    sudo mkdir -p "$LOG_DIR"
+    sudo chmod 755 "$LOG_DIR"
+    sudo touch "$LOG_FILE"
+    sudo chmod 644 "$LOG_FILE"
+    
+    echo "=======================================================" | sudo tee -a "$LOG_FILE"
+    echo "                   VIRUS SCAN REPORT                   " | sudo tee -a "$LOG_FILE"
+    echo "Start time: $(date +'%d/%m/%Y %H:%M:%S')" | sudo tee -a "$LOG_FILE"
+    echo "-------------------------------------------------------" | sudo tee -a "$LOG_FILE"
 }
 
-function closure(){
-################################################################
-# Function to update the antivirus database
-################################################################
-	data=`date +%d/%m/%Y-%H:%M:%S` #Store day and time in the date variable
-	echo Verification finished: ${date} >>/var/log/clamav/relscan.log #Write current date and time into file
-	echo ============================================================= >>/var/log/clamav/relscan.log #prints a line
-	echo ""
-	echo "Verification completed successfully............................................ .....[ OK ]";
-	echo "Report generated in: /var/log/clamav/relscan.log................................... [ OK ]";
-	echo "Clamscan command queries type: clamscan --help.................................";
-	cat /var/log/clamav/relscan.log
-	echo ""
-	pause
+function footer() {
+    echo "-------------------------------------------------------" | sudo tee -a "$LOG_FILE"
+    echo "End time: $(date +'%d/%m/%Y %H:%M:%S')" | sudo tee -a "$LOG_FILE"
+    echo "=======================================================" | sudo tee -a "$LOG_FILE"
+    echo "Report saved to: $LOG_FILE"
+    echo "View full report now? (Y/n)"
+    read -r response
+    if [[ "$response" =~ ^[Yy]$ ]]; then
+        less "$LOG_FILE"
+    fi
+    pause
 }
 
-x="antivirus"
-menu()
-{
-while true $x != "antivirus"
-do
-clear
-echo "==============================================================================="
-echo "Script to help with virus removal!"
-echo "In all check options the Database"
-echo "from Clamav Antivirus and updated before scanning."
-echo "Created by: Luciano R.N."
-echo ""
-echo "1)Scanning using multiple threads and removing viruses from home folder all files."
-echo ""
-echo "2)Scanning using multiple threads and scanning and removing viruses from the complete,"
-echo "root folder up to 5MB files."
-echo ""
-echo "3)Checking and removing viruses from home folder all files."
-echo ""
-echo "4)Scanning and removing viruses from complete root folder up to 5MB files."
-echo ""
-echo "5)Install Clamav Antivirus"
-echo ""
-echo "6)Open latest virus scan report"
-echo ""
-echo "7)Exit program"
-echo ""
-echo "==============================================================================="
-echo "Enter the desired option:"
-read x
-echo "Option informed ($x)"
-echo "==============================================================================="
-
-case "$x" in
-
-	1)
-		################# Update Clamav Antivirus Database ###############################
-		update ##calls update function
-		###################### Scan and remove home virus ################################
-		echo
-		echo "Checking and removing viruses from home folder. Please wait!!!.......................";
-		echo
-		header ## call header function
-		sudo clamdscan --multiscan --fdpass --recursive /home/ --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --quiet >> /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
-		closure ##calls shutdown function
-
-echo "================================================"
-;;
-	2)
-		################# Update Clamav Antivirus Database ########################### ###
-		update ##calls update function
-		###################### Scan and remove HD virus ##################### ##########
-		echo
-		echo "Checking and removing viruses from home folder. Please wait!!!.......................";
-		echo
-		header ## call header function
-		sudo clamdscan --multiscan --fdpass / --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --quiet >> /var/log/clamav/relscan.log #Check and remove the virus and writes the report inside the file
-		closure ##calls shutdown function
-
-echo "================================================"
-;;
-	3)
-		################# Update Clamav Antivirus Database ########################### ###
-		update ##calls update function
-		###################### Scan and remove home virus ##################### ##########
-		echo
-		echo "Checking and removing viruses from the / folder. Please wait!!!.......................";
-		echo
-		header ## call header function
-		sudo clamscan --recursive /home/ --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 >> /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
-		closure ##calls shutdown function
-
-echo "================================================"
-
-	4)
-		################# Update Clamav Antivirus Database ########################### ###
-		update ##calls update function
-		###################### Scan and remove HD virus ##################### ##########
-		echo
-		echo "Checking and removing viruses from the / folder. Please wait!!!.......................";
-		echo
-		header ## call header function
-		sudo clamscan --recursive / --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --bell --remove=yes -i >> /var/log/clamav/relscan.log #Checks and removes viruses and writes the report inside the file
-		closure ##calls shutdown function
-
-echo "================================================"
-
-
-;;
-	5)
-		echo "Installing Antivirus..."
-		sudo apt-get update && sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk -y
-		sudo /etc/init.d/clamav-freshclam stop
-		sudo /usr/bin/freshclam -v
-		sudo /etc/init.d/clamav-freshclam start
-		echo ""
-		echo "Antivirus Installed!"
-		sleep 5
-
-echo "================================================"
-;;
-	6)
-		echo "Open latest virus scan report..."
-		cat /var/log/clamav/relscan.log
-		echo ""
-		echo ""
-		echo ""		
-		pause	
-
-echo "================================================"
-;;
-	7)
-		echo "Exiting..."
-		sleep 1
-		clear;
-		exit 1		
-echo "================================================"
-;;
-	*)
-		echo "Invalid option!"
-esac
-done
-
+function scan_directory() {
+    local directory="$1"
+    local parameters="$2"
+    
+    header
+    echo "Scan type: $3" | sudo tee -a "$LOG_FILE"
+    echo "Target directory: $directory" | sudo tee -a "$LOG_FILE"
+    
+    sudo clamscan $parameters "$directory" | sudo tee -a "$LOG_FILE"
+    footer
 }
-menu
+
+function schedule_scan() {
+    echo "Automatic Scan Scheduling"
+    echo "Enter scan time (HH:MM format):"
+    read -r time
+    echo "Enter directory to scan:"
+    read -r directory
+
+    # Validate time input
+    if ! [[ "$time" =~ ^[0-9]{2}:[0-9]{2}$ ]]; then
+        echo "Invalid time format!"
+        pause
+        return
+    fi
+
+    # Create cron job
+    local cron_job="$time * * * * root clamscan --recursive $directory --bell --remove=yes -i --log=$AUTO_SCAN_LOG"
+    echo "$cron_job" | sudo tee -a /etc/crontab > /dev/null
+    
+    echo "Scan scheduled daily at $time for directory: $directory"
+    pause
+}
+
+# Main menu
+function main_menu() {
+    while true; do
+        clear
+        echo "===================================================================="
+        echo "                     CLAMAV MANAGEMENT CONSOLE                      "
+        echo "===================================================================="
+        echo " 1) Install ClamAV"
+        echo " 2) Update Virus Database"
+        echo "--------------------------------------------------------------------"
+        echo " SCAN OPTIONS:"
+        echo " 3) Quick Scan (Home directory <5MB files)"
+        echo " 4) Full System Scan"
+        echo " 5) Custom Directory Scan"
+        echo " 6) Detection-Only Scan"
+        echo "--------------------------------------------------------------------"
+        echo " ADDITIONAL TOOLS:"
+        echo " 7) View Last Report"
+        echo " 8) Schedule Automatic Scan"
+        echo " 9) Exit"
+        echo "===================================================================="
+        read -r -p "Enter your choice: " choice
+
+        case "$choice" in
+            1)  # Install ClamAV
+                sudo apt update && sudo apt install clamav clamav-daemon -y
+                sudo systemctl enable clamav-freshclam
+                pause
+                ;;
+            
+            2)  # Update database
+                update_db
+                ;;
+            
+            3)  # Quick home scan
+                scan_directory "/home" "--max-filesize=5M --max-scansize=5M" "Quick Scan (<5MB)"
+                ;;
+            
+            4)  # Full system scan
+                scan_directory "/" "--recursive --scan-archive=yes" "Full System Scan"
+                ;;
+            
+            5)  # Custom scan
+                echo "Enter full directory path:"
+                read -r directory
+                if [ -d "$directory" ]; then
+                    scan_directory "$directory" "--recursive" "Custom Scan"
+                else
+                    echo "Invalid directory!"
+                    pause
+                fi
+                ;;
+            
+            6)  # Detection-only scan
+                scan_directory "/home" "--recursive -i --no-summary" "Detection-Only Scan"
+                ;;
+            
+            7)  # View last report
+                if [ -f "$LOG_FILE" ]; then
+                    less "$LOG_FILE"
+                else
+                    echo "No reports found!"
+                    pause
+                fi
+                ;;
+            
+            8)  # Schedule scan
+                schedule_scan
+                ;;
+            
+            9)  # Exit
+                echo "Exiting..."
+                exit 0
+                ;;
+            
+            *)
+                echo "Invalid option!"
+                pause
+                ;;
+        esac
+    done
+}
+
+# Initial setup
+sudo mkdir -p "$LOG_DIR"
+sudo chown -R clamav:clamav "$LOG_DIR"
+main_menu
