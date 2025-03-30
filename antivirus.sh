@@ -7,7 +7,7 @@
 # AUTOR:           Luciano R. Nascimento
 # EMAIL:           rovanni@gmail.com
 # LICENÇA:         GPLv3
-# PROJETO:         https://github.com/rovanni/ClamAV-Management-Script-for-Linux/
+# PROJETO:         https://github.com/rovanni/ClamAVManagementScriptLinux/
 ###################################################################
 
 # Configurações
