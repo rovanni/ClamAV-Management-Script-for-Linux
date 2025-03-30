@@ -127,7 +127,7 @@ function menu() {
         		sudo systemctl restart clamav-daemon
         
         		echo ""
-        		echo "✅ Antivirus ClamAV Instalado e Configurado!"
+        		echo "Antivirus ClamAV Instalado e Configurado!✅"
                 pause
                 ;;
             
