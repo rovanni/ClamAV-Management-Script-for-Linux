@@ -33,6 +33,26 @@ Advanced menu-driven script for virus scanning and system protection using ClamA
 - ⏰ Scheduled scans
 - 📈 Log management and viewing
 
+---
+
+## 🛠️ Technical Details
+
+### Scanning Parameters
+| Option          | Command Parameters                          |
+|-----------------|---------------------------------------------|
+| Quick Scan      | `--max-filesize=5M --max-scansize=5M`       |
+| Full System     | `--recursive --scan-archive=yes`            |
+| Custom Scan     | `--recursive --bell --remove=yes`           |
+| Detection-Only  | `--recursive -i --no-summary`               |
+
+### System Integration
+- Automatic log rotation
+- Systemd service management
+- Cron job scheduling
+- Permission management
+
+---
+
 ## 📄 License
 [![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/rovanni/ClamAVManagementScriptLinux/blob/main/LICENSE)
 
@@ -74,28 +94,30 @@ Script avançado com menu para verificação de vírus e proteção do sistema u
 - ⏰ Verificações programadas
 - 📈 Gerenciamento e visualização de logs
 
+---
+
+## 🛠️ Detalhes técnicos
+
+### Parâmetros de varredura
+| Opção | Parâmetros de comando |
+|-----------------|---------------------------------------------|
+| Varredura rápida | `--max-filesize=5M --max-scansize=5M` |
+| Sistema completo | `--recursive --scan-archive=yes` |
+| Varredura personalizada | `--recursive --bell --remove=yes` |
+| Somente detecção | `--recursive -i --no-summary` |
+
+### Integração do sistema
+- Rotação automática de log
+- Gerenciamento de serviço Systemd
+- Agendamento de tarefa Cron
+- Gerenciamento de permissão
+
+---
+
 ## 📄 Licença
 [![GitHub license](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://github.com/rovanni/ClamAVManagementScriptLinux/blob/main/LICENSE)
 
----
 
-## 🛠️ Technical Details
-
-### Scanning Parameters
-| Option          | Command Parameters                          |
-|-----------------|---------------------------------------------|
-| Quick Scan      | `--max-filesize=5M --max-scansize=5M`       |
-| Full System     | `--recursive --scan-archive=yes`            |
-| Custom Scan     | `--recursive --bell --remove=yes`           |
-| Detection-Only  | `--recursive -i --no-summary`               |
-
-### System Integration
-- Automatic log rotation
-- Systemd service management
-- Cron job scheduling
-- Permission management
-
----
 
 ## ✒️ Author / Autor
 **Luciano R. Nascimento**  
