@@ -1,190 +1,175 @@
 #!/bin/bash
 ###################################################################
-# NOME:				antivirus.sh
-# VERSÃO:				1.1
-# DESCRIÇÃO:			Script para verificar e removendo vírus Linux 			
-# DATA DA CRIAÇÃO:	14/08/2022
-# ESCRITO POR:		Luciano R. Nascimento
-# E-MAIL:				rovanni@gmail.com 			
-# DISTRO:	Linux baseadas em Debian				
-# LICENÇA:			GPLv3 			
-# PROJETO:			https://github.com/rovanni/Script_antivirus_Linux
+# NOME:            clamav_menu.sh
+# VERSÃO:          2.0
+# DESCRIÇÃO:       Script de gerenciamento do ClamAV para Ubuntu Desktop
+# DATA:            14/08/2022 (atualizado em 20/05/2024)
+# AUTOR:           Luciano R. Nascimento
+# EMAIL:           rovanni@gmail.com
+# LICENÇA:         GPLv3
+# PROJETO:         https://github.com/rovanni/ClamAV-Management-Script-for-Linux/
 ###################################################################
 
-function pause(){
-###################################################################
-# Função para criar uma pause
-###################################################################
-	read -s -n 1 -p "Pressione qualquer tecla para continuar . . ."
-	echo ""
-}	
+# Configurações
+LOG_DIR="/var/log/clamav"
+LOG_FILE="$LOG_DIR/relscan.log"
+AUTO_SCAN_LOG="$LOG_DIR/auto_scan.log"
 
-function atualizar(){
-###################################################################
-# Função para atualizar a base de dados do antivírus
-###################################################################
-	################# Atualizar Base dados Antivírus Clamav ###############################
-	echo "Atualizando base de dados do antivírus. Por Favor Aguarde!!!................................";		
-	echo ""	
-	sudo /etc/init.d/clamav-freshclam stop
-	sudo /usr/bin/freshclam -v
-	sudo /etc/init.d/clamav-freshclam start
-	echo ""	
-	echo "Base de dados do antivírus atualizada!!!....................................................";	
-	echo ""		
+# Funções auxiliares
+function pause() {
+    read -r -s -n 1 -p "Pressione qualquer tecla para continuar..."
+    echo
 }
 
-function cabecalho(){
-###################################################################
-# Função para atualizar a base de dados do antivírus
-###################################################################
-	sudo chmod -R 777 /var/log/clamav/		#Permissão de gravar na pasta
-	echo >>/var/log/clamav/relscan.log		#Grava um espaço em branco dentro arquivo
-	echo >>/var/log/clamav/relscan.log		#Grava um espaço em branco dentro arquivo		
-	echo ========================================================= >>/var/log/clamav/relscan.log	#imprime uma linha		
-	echo ----------- Relatório de Verificação de Vírus ----------- >>/var/log/clamav/relscan.log	#Grava cabeçalho
-	data=`date +%d/%m/%Y-%H:%M:%S`			#Armazena dia e hora na variavel data
-	echo Relatório gerado dia: ${data}  >>/var/log/clamav/relscan.log	#Grava data e hora atual dentro arquivo
-	#echo >>/var/log/clamav/relscan.log		#Grava um espaço em branco dentro arquivo	
+function atualizar_db() {
+    echo "Atualizando base de dados do antivírus..."
+    sudo freshclam -v
+    pause
 }
 
-function encerramento(){
-###################################################################
-# Função para atualizar a base de dados do antivírus
-###################################################################
-	data=`date +%d/%m/%Y-%H:%M:%S`			#Armazena dia e hora na variável data
-	echo Verificação encerada: ${data}  >>/var/log/clamav/relscan.log	#Grava data e hora atual dentro arquivo		
-	echo ========================================================= >>/var/log/clamav/relscan.log	#imprime uma linha
-	echo ""	
-	echo "Verificação concluída com sucesso.................................................[ OK ]";
-	echo "Relatorio gerado em: /var/log/clamav/relscan.log..................................[ OK ]";
-	echo "Dúvidas de comandos do Clamscan digite: clamscan --help.................................";		
-	cat /var/log/clamav/relscan.log
-	echo ""	
-	pause	
+function cabecalho() {
+    sudo mkdir -p "$LOG_DIR"
+    sudo chmod 755 "$LOG_DIR"
+    sudo touch "$LOG_FILE"
+    sudo chmod 644 "$LOG_FILE"
+    
+    echo "=======================================================" | sudo tee -a "$LOG_FILE"
+    echo "           RELATÓRIO DE VERIFICAÇÃO DE VÍRUS           " | sudo tee -a "$LOG_FILE"
+    echo "Data/hora inicial: $(date +'%d/%m/%Y %H:%M:%S')" | sudo tee -a "$LOG_FILE"
+    echo "-------------------------------------------------------" | sudo tee -a "$LOG_FILE"
 }
 
-x="antivirus"
-menu ()
-{
-while true $x != "antivirus"
-do
-clear
-echo "==============================================================================="
-echo "Script to help with virus removal!"
-echo "In all check options the Database,"
-echo "from Clamav Antivirus and updated before scanning."
-echo "Created by: Luciano R.N."
-echo ""
-echo "1)Quick scan on user's home folder, performs recursive searches using multiple simultaneous threads."
-echo ""
-echo "2)Fast HD scan, performs recursive searches using multiple simultaneous threads."
-echo ""
-echo "3)Check and remove viruses from home folder all files."
-echo ""
-echo "4)Scans and removes viruses from the root folder, less system files."
-echo ""
-echo "5)Install Clamav Antivirus."
-echo ""
-echo "6)Open latest virus scan report."
-echo ""
-echo "7)Exit the program."
-echo ""
-echo "==============================================================================="
-echo "Enter the desired option:"
-read x
-echo "Option informed ($x)"
-echo "==============================================================================="
-
-case "$x" in
-
-	1)
-		################# Atualizar Base dados Antivírus Clamav ###############################
-		atualizar ##chama função atualizar	
-		####################### Verificar e remover vírus home ###############################
-		echo
-		echo "Verificando e removendo vírus da pasta home. Por Favor Aguarde!!!.......................";
-		echo		
-		cabecalho ##chama função cabeçalho
-		sudo clamdscan --multiscan --fdpass --recursive /home/ --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --quiet >> /var/log/clamav/relscan.log	#Verifica e remove os virus e grava o relatoria dentro do arquivo
-		encerramento ##chama função encerramento
-
-echo "================================================"
-;;
-	2)
-		################# Atualizar Base dados Antivírus Clamav ###############################
-		atualizar ##chama função atualizar	
-		####################### Verificar e remover virus HD ###############################
-		echo
-		echo "Verificando e removendo vírus da pasta /. Por Favor Aguarde!!!.......................";
-		echo
-		cabecalho ##chama função cabeçalho
-		sudo clamdscan --multiscan --fdpass / --remove=yes -i --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --quiet >> /var/log/clamav/relscan.log	#Verifica e remove os vírus e grava o relatoria dentro do arquivo
-		encerramento ##chama função encerramento
-
-echo "================================================"
-;;
-	3)
-		################# Atualizar Base dados Antivírus Clamav ###############################
-		atualizar ##chama função atualizar	
-		####################### Verificar e remover vírus home ###############################
-		echo
-		echo "Verificando e removendo vírus da pasta home. Por Favor Aguarde!!!.......................";
-		echo		
-		cabecalho ##chama função cabeçalho
-		sudo clamscan --recursive /home/ --bell --remove=yes -i --bytecode=yes --bytecode-timeout=5000 
- >> /var/log/clamav/relscan.log	#Verifica e remove os virus e grava o relatoria dentro do arquivo
-		encerramento ##chama função encerramento
-
-echo "================================================"
-;;
-	4)
-		################# Atualizar Base dados Antivírus Clamav ###############################
-		atualizar ##chama função atualizar	
-		####################### Verificar e remover virus HD ###############################
-		echo
-		echo "Verificando e removendo vírus da pasta /. Por Favor Aguarde!!!.......................";
-		echo
-		cabecalho ##chama função cabeçalho
-		sudo clamscan --recursive / --bytecode=yes --bytecode-timeout=5000 --exclude-dir="^/sys" --bell --remove=yes -i >> /var/log/clamav/relscan.log	#Verifica e remove os vírus e grava o relatoria dentro do arquivo
-		encerramento ##chama função encerramento
-
-echo "================================================"
-
-;;
-	5)
-		echo "Instalando Antivírus..."
-		sudo apt-get update && sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk -y
-		sudo /etc/init.d/clamav-freshclam stop
-		sudo /usr/bin/freshclam -v
-		sudo /etc/init.d/clamav-freshclam start		
-		echo ""
-		echo "Antivírus Instalado!"
-		sleep 5
-
-echo "================================================"
-;;
-	6)
-		echo "Abrir ultimo relatório de verificação de vírus..."
-		cat /var/log/clamav/relscan.log
-		echo ""
-		echo ""
-		echo ""		
-		pause	
-
-echo "================================================"
-;;
-	7)
-		echo "Saindo..."
-		sleep 1
-		clear;
-		exit 1		
-echo "================================================"
-;;
-	*)
-        echo "Opção inválida!"
-esac
-done
-
+function encerramento() {
+    echo "-------------------------------------------------------" | sudo tee -a "$LOG_FILE"
+    echo "Data/hora final: $(date +'%d/%m/%Y %H:%M:%S')" | sudo tee -a "$LOG_FILE"
+    echo "=======================================================" | sudo tee -a "$LOG_FILE"
+    echo "Relatório salvo em: $LOG_FILE"
+    echo "Visualizar relatório completo? (S/n)"
+    read -r resposta
+    if [[ "$resposta" =~ ^[Ss]$ ]]; then
+        less "$LOG_FILE"
+    fi
+    pause
 }
+
+function verificar_diretorio() {
+    local diretorio="$1"
+    local parametros="$2"
+    
+    cabecalho
+    echo "Tipo de verificação: $3" | sudo tee -a "$LOG_FILE"
+    echo "Diretório verificado: $diretorio" | sudo tee -a "$LOG_FILE"
+    
+    sudo clamscan $parametros "$diretorio" | sudo tee -a "$LOG_FILE"
+    encerramento
+}
+
+function agendar_verificacao() {
+    echo "Agendamento de verificação automática"
+    echo "Digite o horário (formato HH:MM):"
+    read -r horario
+    echo "Digite o diretório a ser verificado:"
+    read -r diretorio
+
+    # Validar entrada do horário
+    if ! [[ "$horario" =~ ^[0-9]{2}:[0-9]{2}$ ]]; then
+        echo "Formato de horário inválido!"
+        pause
+        return
+    fi
+
+    # Criar entrada no cron
+    local cron_job="$horario * * * * root clamscan --recursive $diretorio --bell --remove=yes -i --log=$AUTO_SCAN_LOG"
+    echo "$cron_job" | sudo tee -a /etc/crontab > /dev/null
+    
+    echo "Verificação agendada diariamente às $horario para o diretório $diretorio"
+    pause
+}
+
+# Menu principal
+function menu() {
+    while true; do
+        clear
+        echo "===================================================================="
+        echo "                  MENU DE GERENCIAMENTO CLAMAV                      "
+        echo "===================================================================="
+        echo " 1) Instalar ClamAV"
+        echo " 2) Atualizar banco de dados de vírus"
+        echo "--------------------------------------------------------------------"
+        echo " VERIFICAÇÕES:"
+        echo " 3) Verificação rápida (home, arquivos até 5MB)"
+        echo " 4) Verificação completa do sistema"
+        echo " 5) Verificação personalizada (diretório escolhido)"
+        echo " 6) Verificação sem remoção (somente detecção)"
+        echo "--------------------------------------------------------------------"
+        echo " OUTRAS FERRAMENTAS:"
+        echo " 7) Exibir último relatório"
+        echo " 8) Agendar verificação automática"
+        echo " 9) Sair"
+        echo "===================================================================="
+        read -r -p "Digite a opção desejada: " opcao
+
+        case "$opcao" in
+            1)  # Instalar ClamAV
+                sudo apt update && sudo apt install clamav clamav-daemon -y
+                sudo systemctl enable clamav-freshclam
+                pause
+                ;;
+            
+            2)  # Atualizar banco de dados
+                atualizar_db
+                ;;
+            
+            3)  # Verificação rápida home
+                verificar_diretorio "/home" "--max-filesize=5M --max-scansize=5M" "Verificação rápida (até 5MB)"
+                ;;
+            
+            4)  # Verificação completa
+                verificar_diretorio "/" "--recursive --scan-archive=yes" "Verificação completa do sistema"
+                ;;
+            
+            5)  # Verificação personalizada
+                echo "Digite o caminho completo do diretório:"
+                read -r diretorio
+                if [ -d "$diretorio" ]; then
+                    verificar_diretorio "$diretorio" "--recursive" "Verificação personalizada"
+                else
+                    echo "Diretório inválido!"
+                    pause
+                fi
+                ;;
+            
+            6)  # Verificação somente detecção
+                verificar_diretorio "/home" "--recursive -i --no-summary" "Verificação de detecção sem remoção"
+                ;;
+            
+            7)  # Exibir último relatório
+                if [ -f "$LOG_FILE" ]; then
+                    less "$LOG_FILE"
+                else
+                    echo "Nenhum relatório encontrado!"
+                    pause
+                fi
+                ;;
+            
+            8)  # Agendar verificação
+                agendar_verificacao
+                ;;
+            
+            9)  # Sair
+                echo "Encerrando..."
+                exit 0
+                ;;
+            
+            *)
+                echo "Opção inválida!"
+                pause
+                ;;
+        esac
+    done
+}
+
+# Execução inicial
+sudo mkdir -p "$LOG_DIR"
+sudo chown -R clamav:clamav "$LOG_DIR"
 menu
