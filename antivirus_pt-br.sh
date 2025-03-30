@@ -111,8 +111,23 @@ function menu() {
 
         case "$opcao" in
             1)  # Instalar ClamAV
-                sudo apt update && sudo apt install clamav clamav-daemon -y
-                sudo systemctl enable clamav-freshclam
+        		echo "Instalando Antivirus ClamAV..." 
+        		sudo apt-get update && sudo apt-get install clamav clamav-daemon clamav-freshclam clamtk -y
+        
+        		echo "Ativando ClamAV para monitoramento em tempo real..."
+        		sudo systemctl enable clamav-daemon
+        		sudo systemctl start clamav-daemon
+        
+        		echo "Atualizando o banco de dados de vírus do ClamAV..."
+        		sudo systemctl stop clamav-freshclam
+        		sudo freshclam
+        		sudo systemctl start clamav-freshclam
+        
+        		echo "Reiniciando o daemon do ClamAV para aplicar atualizações..."
+        		sudo systemctl restart clamav-daemon
+        
+        		echo ""
+        		echo "✅ Antivirus ClamAV Instalado e Configurado!"
                 pause
                 ;;
             
